@@ -2,12 +2,13 @@ import express from "express"
 import notesRoutes from "./routes/notesRoutes.js"
 import {connectDB} from "./config/db.js"
 import dotenv from "dotenv"
+import rateLimiter from "./middleware/ratelimiter.js"
 
 dotenv.config()
 console.log(process.env.mongo_uri)
 const app = express()
 
-connectDB()
+
 
 app.use(express.json())
 
@@ -16,11 +17,15 @@ app.use((req,res,next)=>{
     next()
 })
 
+app.use(rateLimiter)
 app.use("/api/notes",notesRoutes)
 
 
-app.listen(5001, ()=>{
+connectDB().then(()=>{
+    app.listen(5001, ()=>{
     console.log("server listening on port 5001")
+    })
 })
+
 
 
