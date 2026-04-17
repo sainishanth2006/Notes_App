@@ -5,7 +5,6 @@ import RateLimitedUI from '../components/RateLimitedUI.jsx'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import NoteCard from '../components/NoteCard.jsx'
-import NotesNotFound from '../components/notesnotfound.jsx'
 import api from '../lib/utils/axios.js'
 
 
