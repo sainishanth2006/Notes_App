@@ -17,17 +17,28 @@ const HomePage = () => {
     const fetchNotes = async()=>{
       try {
         const response = await api.get('/notes')
-        setNotes(response.data)
+        const notesData = Array.isArray(response.data)
+          ? response.data
+          : response.data?.notes ?? []
+
+        if (!Array.isArray(response.data)) {
+          console.error("Unexpected /notes response:", response.data)
+          if (!response.data?.notes) {
+            toast.error("Unable to load notes from the server")
+          }
+        }
+
+        setNotes(notesData)
         setIsRateLimited(false)
 
       } catch (error) {
         console.log(error)
-        if(error.response?.status === 429){
+        if (error.response?.status === 429) {
           setIsRateLimited(true)
-        }else{
+        } else {
           toast.error("An error occurred while fetching notes")
         }
-      }finally{
+      } finally {
         setLoading(false)
       }
     }
